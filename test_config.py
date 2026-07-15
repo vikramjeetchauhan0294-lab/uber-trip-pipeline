@@ -1,0 +1,4 @@
+from config.settings import KAFKA_BOOTSTRAP_SERVERS, KAFKA_TOPIC
+
+print(KAFKA_BOOTSTRAP_SERVERS)
+print(KAFKA_TOPIC)
