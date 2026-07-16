@@ -18,48 +18,66 @@ def create_producer():
         value_serializer=lambda value: json.dumps(value).encode("utf-8")
     )
 
-    logger.info("Kafka Producer Connected Successfully")
+    logger.info("✅ Kafka Producer Connected Successfully")
 
     return producer
 
 
 def send_trip(producer, trip):
     """
-    Send a trip event to Kafka.
+    Send a trip event to Kafka and log partition & offset.
     """
 
     try:
-        producer.send(
+        # Send the message to Kafka
+        future = producer.send(
             topic=KAFKA_TOPIC,
             value=trip
         )
 
+        # Wait for Kafka acknowledgement
+        metadata = future.get(timeout=10)
+
+        # Flush pending messages
         producer.flush()
 
-        logger.info(f"Sent {trip['trip_id']} to Kafka")
+        # Log success
+        logger.info(
+            f"Trip {trip['trip_id']} stored in "
+            f"Partition {metadata.partition}, "
+            f"Offset {metadata.offset}"
+        )
 
     except Exception as e:
-        logger.error(f"Failed to send trip: {e}")
+        logger.error(f"❌ Failed to send trip: {e}")
 
 
 def main():
     """
-    Main function to continuously generate and send trips.
+    Continuously generate Uber trips and send them to Kafka.
     """
 
     producer = create_producer()
 
     trip_number = 1
 
-    while True:
+    try:
+        while True:
 
-        trip = generate_trip(trip_number)
+            trip = generate_trip(trip_number)
 
-        send_trip(producer, trip)
+            send_trip(producer, trip)
 
-        trip_number += 1
+            trip_number += 1
 
-        time.sleep(1)
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        logger.info("🛑 Producer stopped by user.")
+
+    finally:
+        producer.close()
+        logger.info("Kafka Producer Closed.")
 
 
 if __name__ == "__main__":
