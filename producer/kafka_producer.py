@@ -3,6 +3,7 @@ import time
 
 from kafka import KafkaProducer
 
+
 from producer.trip_generator import generate_trip
 from config.settings import KAFKA_BOOTSTRAP_SERVERS, KAFKA_TOPIC
 from logger.logger import logger
