@@ -1,0 +1,6 @@
+trip_id,driver_id,rider_id,pickup_location,dropoff_location,distance_km,fare
+TRIP_000001,DRV_101,RID_1001,Airport,MG Road,15.5,420
+TRIP_000002,DRV_102,RID_1002,Whitefield,Airport,22.0,610
+TRIP_000003,DRV_103,RID_1003,Koramangala,Electronic City,8.2,240
+TRIP_000004,DRV_104,RID_1004,Indiranagar,Whitefield,11.5,310
+TRIP_000005,DRV_105,RID_1005,Airport,HSR Layout,18.3,510
